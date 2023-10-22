@@ -1,0 +1,6 @@
+mongo/
+.vscode/
+src/.env
+node_modules/
+dist/
+build/

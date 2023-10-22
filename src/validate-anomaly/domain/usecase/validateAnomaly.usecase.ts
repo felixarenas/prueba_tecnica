@@ -75,15 +75,18 @@ export class ValidateAnomaly implements ValidateAnomalyUseCase {
         let a:number = 0;
         let b:number = 0;
         let j:number = 0;
+        let z:number = 0;
         let count:number = 0;
         let anomalias:boolean = false;
+        let letraBase:string;
+        let letraPibote:string;
         for (a=0; a<x; a++) {
             let fila = dna[a];
             for (j=0; j<fila.length; j++) {
-                let letraBase = fila[j];
+                letraBase = fila[j];
                 count = 0;
                 for (b=j; b<x; b++) {
-                    let letraPibote = fila[b];
+                    letraPibote = fila[b];
                     if (letraBase === letraPibote) {
                         count ++;
                     } else {
@@ -111,10 +114,10 @@ export class ValidateAnomaly implements ValidateAnomalyUseCase {
             count = 0;
             for (a=0; a<y; a++) {
                 for (j=0; j<y; j++) {
-                    let letraBase = dna[j][a];
+                    letraBase = dna[j][a];
                     count = 0;
                     for (b=j; b<y; b++) {
-                        let letraPibote = dna[b][a];
+                        letraPibote = dna[b][a];
                         if (letraBase === letraPibote) {
                             count ++;
                         } else {
@@ -141,10 +144,10 @@ export class ValidateAnomaly implements ValidateAnomalyUseCase {
             //Buscamos en diagonal de Derecha a izquierda y de izquierda a derecha, (X)
             count = 0;
             for (a=0; a<x; a++) {
-                let letraBase = dna[a][a];
+                letraBase = dna[a][a];
                 count = 0;
                 for (b=a; b<x; b++) {
-                    let letraPibote = dna[b][b];
+                    letraPibote = dna[b][b];
                     if (letraBase === letraPibote) {
                         count ++;
                     } else {
@@ -165,11 +168,11 @@ export class ValidateAnomaly implements ValidateAnomalyUseCase {
             if (anomalias == false){
                 b=x-1;
                 for (a=0; a<x; a++) {
-                    let letraBase = dna[a][b];
+                    letraBase = dna[a][b];
                     let z:number = a;
                     count = 0;
                     for (j=b; j>=0; j--) {
-                        let letraPibote = dna[z][j];
+                        letraPibote = dna[z][j];
                         if (letraBase === letraPibote) {
                             count ++;
                         } else {
@@ -196,10 +199,62 @@ export class ValidateAnomaly implements ValidateAnomalyUseCase {
         }
 
         if (anomalias == false) {
-            //Valida diagonal de arriba hacia abajo, derecha a izquierda
-            count = 0;
+            //Valida diagonales de arriba hacia abajo, derecha a izquierda
+            b=0;
+            z=0;
+            j=0;
             for (a=0; a<x; a++) {
+                b=0;
+                z=a;
+                let band:boolean = false;
+                letraBase = dna[z][b];
+                count = 0;
+                while(a>=b){                  
+                    letraPibote = dna[z][b];
+                    if (letraBase === letraPibote) {
+                        count++;
+                    } else {
+                        if (count >= 3) {
+                            
+                            break;
+                        }
+                        count = 0;
+                    }
+                    b++;
+                    z--;
+                }
+                if (count >= 3) {
+                    anomalias = true;
+                    break;
+                } 
+                j++;
+            }
 
+            for (a=0; a<x; a++) {
+                b=(x-1);
+                letraBase = dna[b][a];
+                j=b;
+                z=a;
+                count = 0;
+                while(a<=j){
+                    letraPibote = dna[j][z];
+                    if (letraBase === letraPibote) {
+                        count++;
+                    } else {
+                        if (count >= 3) {
+                            
+                            break;
+                        }
+                        count = 0;
+                    }
+                    j--;
+                    z++;
+                }
+
+                if (count >= 3) {
+                    anomalias = true;
+                    break;
+                }
             }
         } 
 

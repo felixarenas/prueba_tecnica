@@ -17,11 +17,11 @@ export class GetStatsModel {
 
     async get():Promise<JsonResp> {
 
-        try {
+        const Client = await PostgresDataBaseAdapter({
+            dbType: "Client"
+        });
 
-            const Client = await PostgresDataBaseAdapter({
-                dbType: "Client"
-            });
+        try {
 
             let sql:string = `
             select (SELECT count (id) as count_anomalies
@@ -39,6 +39,8 @@ export class GetStatsModel {
 
             const resp = await Client.query(sql);
 
+            Client.end();
+
             return {
                 jsonData:{
                     count_anomalies:resp.rows[0].count_anomalies,
@@ -47,6 +49,8 @@ export class GetStatsModel {
                 }
             }            
         } catch (error) {
+
+            Client.end();
 
             return {
                 jsonData:{

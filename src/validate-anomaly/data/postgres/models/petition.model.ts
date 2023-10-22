@@ -29,12 +29,12 @@ export class PetitionModel {
 
     async save():Promise<JsonResp> {
 
+        const Client = await PostgresDataBaseAdapter({
+            dbType: "Client"
+        });
+
         try {
 
-            const Client = await PostgresDataBaseAdapter({
-                dbType: "Client"
-            });
-    
             let anomaly:number = 0;
     
             if (this.jsonData.anomalia == 'SI') {
@@ -51,6 +51,8 @@ export class PetitionModel {
                 anomaly,
             ]);
 
+            Client.end();
+
             return {
                 jsonData:{
                     id: resp.rows[0].id,
@@ -58,7 +60,9 @@ export class PetitionModel {
                 }
             }            
         } catch (error) {
-            
+
+            Client.end();
+
             return {
                 jsonData:{
                     id:undefined,
